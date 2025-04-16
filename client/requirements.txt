@@ -1,0 +1,7 @@
+langchain
+langchain-google-genai
+streamlit
+opencv-python-headless
+requests
+ultralytics
+opencv-python
