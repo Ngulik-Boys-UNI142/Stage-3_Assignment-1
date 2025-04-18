@@ -44,7 +44,7 @@ Smart Plant is an IoT-based system designed to monitor and manage plant health u
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/Smart-Plant.git
+git clone https://github.com/Ngulik-Boys-UNI142/Smart-Plant.git
 cd Smart-Plant
 ```
 
