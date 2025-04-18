@@ -29,7 +29,7 @@ Smart Plant is an IoT-based system designed to monitor and manage plant health u
 
 ### Hardware Setup
 
-| <img src="images/esp32-cam-alone.jpg" alt="ESP32-CAM Module" width="150"> | <img src="images/system-wiring.jpg" alt="Full System Wiring" width="400"> |
+| <img src="images/esp32-cam-alone.jpg" alt="ESP32-CAM Module" width="150"> | <img src="images/wiring-system.jpg" alt="Full System Wiring" width="400"> |
 |:-----------------------------------------:|:-----------------------------------------------:|
 | ESP32-CAM Module                          | Full System Wiring (Sensors, Relays, Pumps, etc.)|
 
@@ -132,6 +132,6 @@ This project is licensed under the MIT License.
 ![ESP32-CAM Module](images/esp32-cam-alone.jpg)
 
 ### Full System Wiring
-![Full System Wiring](images/system-wiring.jpg)
+![Full System Wiring](images/wiring-system.jpg)
 
 For questions or contributions, please open an issue or pull request!
