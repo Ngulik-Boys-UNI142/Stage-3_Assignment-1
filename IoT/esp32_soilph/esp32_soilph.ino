@@ -5,6 +5,8 @@
 #include "FS.h"
 #include "LittleFS.h"
 
+#define POT_ID 941
+
 // Pin definitions
 #define MOISTURE_PIN 33
 #define PH_PIN 35
@@ -33,7 +35,7 @@
 #define UBIDOTS_HTTP_ENDPOINT "http://industrial.api.ubidots.com/api/v1.6/devices/"
 
 // Flask API 
-#define FLASK_API_ENDPOINT "https://api-smart-plant.vercel.app/insert/data"
+#define FLASK_API_ENDPOINT "https://api-smart-plant.vercel.app/insert/data" + String(POT_ID)
 
 // Global variables for sensor data
 int moisturePercent = 0;
@@ -100,7 +102,7 @@ bool sendDataToFlaskAPI(int moistureValue, float phValue) {
   if (WiFi.status() != WL_CONNECTED) return false;
 
   HTTPClient http;
-  http.begin(FLASK_API_ENDPOINT);
+  http.begin(FLASK_API_ENDPOINT.c_str());
   http.addHeader(F("Content-Type"), F("application/json"));
   
   StaticJsonDocument<200> doc;

@@ -6,12 +6,13 @@
 #include "LittleFS.h"
 
 #define TRIGGER_PIN 13
+#define POT_ID 941
 
 #define WIFI_CONFIG_FILE "/wifi_config.txt"
 
 bool wm_nonblocking = false;
 WiFiManager wm;
-const char* flask_url = "https://api-smart-plant.vercel.app/post/image";
+const char* flask_url = "https://api-smart-plant.vercel.app/post/image/" + String(POT_ID);
 
 void saveWiFiManagerParamsCallback() {
   saveWiFiCredentials(WiFi.SSID(), WiFi.psk());
@@ -210,7 +211,7 @@ void loop() {
     Serial.printf("Image captured - Size: %d bytes\n", fb->len);
     
     HTTPClient http;
-    http.begin(flask_url);
+    http.begin(flask_url.c_str());
     http.addHeader("Content-Type", "image/jpeg");
     
     Serial.println("Sending image to server...");
