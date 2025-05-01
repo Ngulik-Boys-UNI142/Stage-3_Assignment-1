@@ -12,7 +12,7 @@
 
 bool wm_nonblocking = false;
 WiFiManager wm;
-const char* flask_url = "https://api-smart-plant.vercel.app/post/image/" + String(POT_ID);
+const String flask_url = "https://api-smart-plant.vercel.app/post/image/" + String(POT_ID);
 
 void saveWiFiManagerParamsCallback() {
   saveWiFiCredentials(WiFi.SSID(), WiFi.psk());

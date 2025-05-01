@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <ArduinoJson.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <WiFiManager.h>
@@ -35,7 +36,7 @@
 #define UBIDOTS_HTTP_ENDPOINT "http://industrial.api.ubidots.com/api/v1.6/devices/"
 
 // Flask API 
-#define FLASK_API_ENDPOINT "https://api-smart-plant.vercel.app/insert/data" + String(POT_ID)
+const String FLASK_API_ENDPOINT = "https://api-smart-plant.vercel.app/insert/data/" + String(POT_ID);
 
 // Global variables for sensor data
 int moisturePercent = 0;
@@ -55,6 +56,7 @@ unsigned long lastSensorReadTime = 0;
 unsigned long lastUbidotsSendTime = 0;
 unsigned long lastWiFiCheckTime = 0;
 unsigned long lastPumpCheckTime = 0;
+unsigned long lastFlaskSendTime = 0;
 
 // WiFi Manager callback
 void saveWiFiManagerParamsCallback() {
@@ -208,12 +210,12 @@ float readPHSensor() {
   float voltage = pH_value * (3.3 / 4095.0);
   float pH = 7 + (2.5 - voltage) * 3.5;
   
-  Serial.print(F("pH ADC: "));
-  Serial.print(pH_value);
-  Serial.print(F(" | Voltage: "));
-  Serial.print(voltage, 2);
-  Serial.print(F(" V | pH: "));
-  Serial.println(pH, 2);
+  // Serial.print(F("pH ADC: "));
+  // Serial.print(pH_value);
+  // Serial.print(F(" | Voltage: "));
+  // Serial.print(voltage, 2);
+  // Serial.print(F(" V | pH: "));
+  // Serial.println(pH, 2);
   
   return pH;
 }
@@ -249,24 +251,24 @@ void loop() {
       newDataAvailable = true;
     }
     
-    Serial.print(F("Moisture: "));
-    Serial.print(rawValue);
-    Serial.print(F(" raw, "));
-    Serial.print(moisturePercent);
-    Serial.println(F("%"));
+    // Serial.print(F("Moisture: "));
+    // Serial.print(rawValue);
+    // Serial.print(F(" raw, "));
+    // Serial.print(moisturePercent);
+    // Serial.println(F("%"));
     
     lastSensorReadTime = currentMillis;
   }
   
   if (currentMillis - lastPumpCheckTime >= ((pumpRunning1 || pumpRunning2) ? 1000 : 5000)) {
-    Serial.print(F("Moisture: "));
-    Serial.print(moisturePercent);
-    Serial.print(F("%, Threshold: "));
-    Serial.println(DRY_THRESHOLD);
-    Serial.print(F(" | pH: "));
-    Serial.print(pH, 2);
-    Serial.print(F(", Threshold: "));
-    Serial.println(PH_LOW_THRESHOLD);
+    // Serial.print(F("Moisture: "));
+    // Serial.print(moisturePercent);
+    // Serial.print(F("%, Threshold: "));
+    // Serial.println(DRY_THRESHOLD);
+    // Serial.print(F(" | pH: "));
+    // Serial.print(pH, 2);
+    // Serial.print(F(", Threshold: "));
+    // Serial.println(PH_LOW_THRESHOLD);
     
     controlWaterPump();
     controlPHPump();
@@ -286,19 +288,19 @@ void loop() {
     lastWiFiCheckTime = currentMillis;
   }
 
-  if (newDataAvailable && WiFi.status() == WL_CONNECTED && 
-      currentMillis - lastUbidotsSendTime >= 1000) {
+  // if (newDataAvailable && WiFi.status() == WL_CONNECTED && 
+  //     currentMillis - lastUbidotsSendTime >= 1000) {
     
-    if (sendDataToUbidots(moisturePercent, pH)) {
-      lastSentMoisturePercent = moisturePercent;
-      newDataAvailable = false;
-      Serial.println(F("Data sent to Ubidots"));
-    }
+  //   if (sendDataToUbidots(moisturePercent, pH)) {
+  //     lastSentMoisturePercent = moisturePercent;
+  //     newDataAvailable = false;
+  //     Serial.println(F("Data sent to Ubidots"));
+  //   }
     
-    lastUbidotsSendTime = currentMillis;
-  }
+  //   lastUbidotsSendTime = currentMillis;
+  // }
   
-  if (newDataAvailable && WiFi.status() == WL_CONNECTED && 
+  if ( WiFi.status() == WL_CONNECTED && 
       currentMillis - lastFlaskSendTime >= 5000) {
     
     if (sendDataToFlaskAPI(moisturePercent, pH)) {
