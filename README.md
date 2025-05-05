@@ -1,6 +1,6 @@
 # Smart Plant IoT System
 
-![ESP32-CAM and System Overview](images/esp32-cam.jpg)
+![ESP32-CAM and System Overview](images/device.png)
 
 ## Overview
 
@@ -22,6 +22,7 @@ Smart Plant is an IoT-based system designed to monitor and manage plant health u
 - **ESP32 Dev Board** (for sensor data collection)
 - **Soil Moisture Sensor**
 - **pH Sensor**
+- **LCD 12C**
 - **Relay Module**
 - **Water Pump(s)**
 - **9V Battery** (or suitable power supply)
@@ -36,7 +37,10 @@ Smart Plant is an IoT-based system designed to monitor and manage plant health u
 ## Software Architecture
 
 - **IoT Firmware:** Arduino code for ESP32-CAM and ESP32 (located in `/IoT/`).
-- **Backend Server:** Flask app for receiving images and sensor data (`/server/`).
+- **Backend Server:**
+    - Flask app for receiving images and sensor data (`/server/`).
+    - Flask app for predicting plant health and disease (`/server-image/`).
+- **YOLO Model:** Trained YOLO model for object detection (`/AI/`).
 - **Client Dashboard:** Streamlit app for visualization and AI chat (`/client/`).
 
 ## Getting Started
@@ -83,38 +87,76 @@ streamlit run main.py
 
 ## API Endpoints
 
-- `POST /post/image` — Upload image (from ESP32-CAM)
+The system uses two backend servers:
+
+**1. Main Server (`/server/`)**
+
+*   `POST /insert/user`: Register a new user and associate them with a pot ID. Requires `chat_id` and `pot_id` in JSON body.
+*   `POST /insert/data/<id>`: Upload sensor data (pH, soil moisture) for a specific pot ID (`<id>`). Requires `ph` and `soil` in JSON body.
+*   `GET /find/data/<id>`: Retrieve all historical sensor data for a specific pot ID (`<id>`).
+*   `GET /find/pot/<id>`: Retrieve all pot IDs associated with a specific user chat ID (`<id>`).
+*   `GET /find/users`: Retrieve a list of all registered user chat IDs.
+*   `POST /destroy/pot`: Disassociate and remove a pot for a user. Requires `chat_id` and `pot_id` in JSON body.
+*   `GET /get/image/<id>`: Retrieve the latest *processed* plant image associated with the pot ID (`<id>`). (The image is processed and stored by the Image Processing Server).
+
+**2. Image Processing Server (`/server-image/`)**
+
+*   `POST /post/image/<id>`: Upload a raw image from the ESP32-CAM for a specific pot ID (`<id>`). The server performs object detection/prediction on the image and updates the stored image URL.
+
+(Note: Some routes might appear duplicated in the code but serve distinct primary functions between the two servers. This list reflects the main purpose of each endpoint.)*
 - `GET /get/image` — Retrieve latest image
 - `POST /insert/data` — Upload sensor data (pH, soil moisture)
-- `GET /find/data` — Retrieve all sensor data
 
 ## File Structure
 
 ```plaintext
 Smart-Plant/
-│
+├── .gitignore
 ├── AI/
 │   └── training_model_iot_smart_plant.ipynb
-│
 ├── IoT/
-│   ├── esp32cam.ino
-│   └── esp32_soilph.ino
-│
-├── server/
-│   ├── main.py
-│   ├── controller.py
-│   ├── model.py
-│   └── requirements.txt
-│
+│   ├── esp32_soilph/
+│   │   └── esp32_soilph.ino
+│   └── esp32cam/
+│       └── esp32cam.ino
+├── LICENSE
+├── README.md
 ├── client/
-│   ├── main.py
+│   ├── .gitignore
+│   ├── chat.py
 │   ├── dashboard.py
 │   ├── detection.py
+│   ├── login.py
+│   ├── main.py
 │   ├── model_genai.py
-│   ├── best.pt
+│   ├── packages.txt
 │   └── requirements.txt
-│
-└── README.md
+├── images/
+│   ├── device.png
+│   ├── esp32-cam-alone.jpg
+│   ├── esp32-cam.jpg
+│   └── wiring-system.jpg
+├── server-image/
+│   ├── .dockerignore
+│   ├── .gitignore
+│   ├── Dockerfile
+│   ├── best_pest.pt
+│   ├── best_sickness.pt
+│   ├── cloudinary_handler.py
+│   ├── controller.py
+│   ├── main.py
+│   ├── model.py
+│   ├── requirements.txt
+│   ├── vercel.json
+│   └── white.jpg
+└── server/
+    ├── .gitignore
+    ├── cloudinary_handler.py
+    ├── controller.py
+    ├── main.py
+    ├── model.py
+    ├── requirements.txt
+    └── vercel.json
 ```
 
 ## Credits
