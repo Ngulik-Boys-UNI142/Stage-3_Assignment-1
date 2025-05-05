@@ -1,0 +1,7 @@
+Flask
+requests
+pymongo==4.6.1
+pandas
+cloudinary
+opencv-python-headless
+ultralytics
