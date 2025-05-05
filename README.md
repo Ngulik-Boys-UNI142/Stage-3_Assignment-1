@@ -4,13 +4,14 @@
 
 ## Overview
 
-Smart Plant is an IoT-based system designed to monitor and manage plant health using a combination of sensors, an ESP32-CAM for image capture, and a cloud-based dashboard for real-time data visualization and AI-powered plant analysis. The system collects soil moisture, pH, and plant images, sending them to a Flask backend for storage and further processing. A Streamlit client provides an interactive dashboard and AI chat assistant for plant care.
+Smart Plant is an IoT-based system designed to monitor and manage plant health using a combination of sensors, an ESP32-CAM for image capture, and a cloud-based dashboard (Streamlit) and Telegram chatbot for real-time data visualization and AI-powered plant analysis. The system collects soil moisture, pH, and plant images, sending them to a Flask backend for storage and further processing. The Streamlit client provides an interactive dashboard, while the Telegram bot offers monitoring and interaction capabilities.
 
 ## Features
 
 - **Real-time Monitoring:** Collects soil moisture, pH, and plant images.
 - **Remote Image Capture:** Uses ESP32-CAM to capture and send plant images to the server.
 - **Data Visualization:** Streamlit dashboard displays historical and real-time sensor data.
+- **Telegram Bot Integration:** Monitor plant status and interact via Telegram commands.
 - **AI Plant Assistant:** Integrated AI chat for plant care advice (using Gemini/Google Generative AI).
 - **Object Detection:** YOLO-based model for plant and disease detection from images.
 - **Cloud Backend:** Flask server for data and image storage, accessible via REST API.
@@ -42,6 +43,7 @@ Smart Plant is an IoT-based system designed to monitor and manage plant health u
     - Flask app for predicting plant health and disease (`/server-image/`).
 - **YOLO Model:** Trained YOLO model for object detection (`/AI/`).
 - **Client Dashboard:** Streamlit app for visualization and AI chat (`/client/`).
+- **Telegram Bot:** Python script for interacting with the Telegram bot (`/bot_tele/`).
 
 ## Getting Started
 
@@ -113,7 +115,8 @@ The system uses two backend servers:
 Smart-Plant/
 ├── .gitignore
 ├── AI/
-│   └── training_model_iot_smart_plant.ipynb
+│   ├── training_model_iot_smart_plant.ipynb
+│   └── training_model_pest_iot_smart_plant.ipynb.ipynb
 ├── IoT/
 │   ├── esp32_soilph/
 │   │   └── esp32_soilph.ino
@@ -121,6 +124,8 @@ Smart-Plant/
 │       └── esp32cam.ino
 ├── LICENSE
 ├── README.md
+├── bot_tele/
+│   └── main.py
 ├── client/
 │   ├── .gitignore
 │   ├── chat.py
